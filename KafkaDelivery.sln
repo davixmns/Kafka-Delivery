@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.Web", "KafkaDelivery.Web\KafkaDelivery.Web.csproj", "{BFDD39BB-C019-48DB-87CF-6E76A1AEE0BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.Domain", "KafkaDelivery.Domain\KafkaDelivery.Domain.csproj", "{6FB76EAA-31D6-4CAC-BED8-7E450D737EF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.Infra", "KafkaDelivery.Infra\KafkaDelivery.Infra.csproj", "{275B83AD-D458-4BA9-9255-AA382833DE26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.App", "KafkaDelivery.App\KafkaDelivery.App.csproj", "{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFDD39BB-C019-48DB-87CF-6E76A1AEE0BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFDD39BB-C019-48DB-87CF-6E76A1AEE0BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFDD39BB-C019-48DB-87CF-6E76A1AEE0BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFDD39BB-C019-48DB-87CF-6E76A1AEE0BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FB76EAA-31D6-4CAC-BED8-7E450D737EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FB76EAA-31D6-4CAC-BED8-7E450D737EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FB76EAA-31D6-4CAC-BED8-7E450D737EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB76EAA-31D6-4CAC-BED8-7E450D737EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{275B83AD-D458-4BA9-9255-AA382833DE26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{275B83AD-D458-4BA9-9255-AA382833DE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{275B83AD-D458-4BA9-9255-AA382833DE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{275B83AD-D458-4BA9-9255-AA382833DE26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
