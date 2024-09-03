@@ -1,4 +1,4 @@
-namespace KafkaDelivery.Infra.Utils;
+namespace KafkaDelivery.Notifier.Utils;
 
 public class KafkaTopics
 {

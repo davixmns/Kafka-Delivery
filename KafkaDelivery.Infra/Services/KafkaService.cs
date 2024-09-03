@@ -3,13 +3,15 @@ using Confluent.Kafka;
 
 namespace KafkaDelivery.Infra.Services;
 
-public class BrokerService : IBrokerService
+public class KafkaService : IKafkaService
 {
     private readonly ProducerConfig _config;
+    private readonly IProducer<string, string> _producer;
 
-    public BrokerService(ProducerConfig config)
+    public KafkaService(ProducerConfig config)
     {
         _config = config;
+        _producer = new ProducerBuilder<string, string>(_config).Build();
     }
 
     public async Task<DeliveryResult<string, string>> PublishMessageToTopicAsync<T>(T message, string topicName, int partition)
@@ -18,10 +20,8 @@ public class BrokerService : IBrokerService
         {
             Value = JsonSerializer.Serialize(message)
         };
-
-        using var producer = new ProducerBuilder<string, string>(_config).Build();
-
-        var deliveryResult = await producer.ProduceAsync(
+        
+        var deliveryResult = await _producer.ProduceAsync(
             new TopicPartition(topicName, new Partition(partition)), formattedMessage);
 
         return deliveryResult;
