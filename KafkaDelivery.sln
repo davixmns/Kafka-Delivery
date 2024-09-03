@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.Infra", "Kafk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.App", "KafkaDelivery.App\KafkaDelivery.App.csproj", "{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Consumer", "Consumer", "{89715510-60D4-4891-81E3-53020E94C618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaDelivery.Notifier", "KafkaDelivery.Notifier\KafkaDelivery.Notifier.csproj", "{E1740533-ACC2-406C-94E4-54BDAD8E3FF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,12 @@ Global
 		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B5A0FB3-758C-4D16-861D-5A061C7CBF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1740533-ACC2-406C-94E4-54BDAD8E3FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1740533-ACC2-406C-94E4-54BDAD8E3FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1740533-ACC2-406C-94E4-54BDAD8E3FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1740533-ACC2-406C-94E4-54BDAD8E3FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E1740533-ACC2-406C-94E4-54BDAD8E3FF5} = {89715510-60D4-4891-81E3-53020E94C618}
 	EndGlobalSection
 EndGlobal
