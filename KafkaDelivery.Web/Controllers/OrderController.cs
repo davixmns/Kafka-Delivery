@@ -1,5 +1,6 @@
-using KafkaDelivery.App.Services;
-using KafkaDelivery.Domain.Entities;
+using KafkaDelivery.App.Commands;
+using KafkaDelivery.App.Dtos;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -8,20 +9,22 @@ namespace Web.Controllers;
 [Route("[controller]")]
 public class OrderController: ControllerBase
 {
-    private readonly IOrderService _orderService;
+    private readonly IMediator _mediator;
     
-    public OrderController(IOrderService orderService)
+    public OrderController(IMediator mediator)
     {
-        _orderService = orderService;
+        _mediator = mediator;
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] Order order)
+    public async Task<IActionResult> CreateOrder(CreateOrderRequestDto orderRequestDto)
     {
-        var createOrderResult = await _orderService.CreateOrderAsync(order);
+        var createOrderCommand = new CreateOrderCommand(orderRequestDto);
         
-        return createOrderResult.IsSuccess
-            ? Ok(createOrderResult)
-            : BadRequest(createOrderResult);
+        var result = await _mediator.Send(createOrderCommand);
+        
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(result);
     }
 }

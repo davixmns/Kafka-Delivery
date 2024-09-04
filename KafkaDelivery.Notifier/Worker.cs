@@ -21,47 +21,42 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        _logger.LogInformation("Order notifier is running at: {time}", DateTimeOffset.UtcNow);
+
+        using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConsumerConfig).Build();
+        consumer.Subscribe(KafkaTopics.Orders);
+
+        try
         {
-            CancellationTokenSource cts = new();
-            Console.CancelKeyPress += (_, e) =>
+            while (!stoppingToken.IsCancellationRequested)
             {
-                e.Cancel = true; // prevent the process from terminating.
-                cts.Cancel();
-            };
+                var consumeResult = consumer.Consume(stoppingToken);
+                using var jsonDoc = JsonDocument.Parse(consumeResult.Message.Value);
+                var root = jsonDoc.RootElement;
+                
+                var customer = root.GetProperty("Customer");
+                var customerEmail= customer.GetProperty("Email").GetString()!;
+                var orderStatus = root.GetProperty("Status").GetInt32().ToString();
+                var userName = customer.GetProperty("Name").GetString()!;
+                
+                _notifierService.NotifyUserOrderStatus(userName, customerEmail, orderStatus);
 
-            _logger.LogInformation("Order netifier is running at: {time}", DateTimeOffset.UtcNow);
-
-            using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConsumerConfig).Build();
-
-            consumer.Subscribe(KafkaTopics.Orders);
-
-            try
-            {
-                while (true)
-                {
-                    var consumeResult = consumer.Consume(cts.Token);
-
-                    Console.WriteLine("ConsumeResult: " + consumeResult.Message.Value);
-
-                    using var jsonDoc = JsonDocument.Parse(consumeResult.Message.Value);
-                    var root = jsonDoc.RootElement;
-
-                    var customerEmail = root.GetProperty("Customer").GetProperty("Email").GetString()!;
-
-                    _notifierService.Notify(customerEmail);
-
-                    consumer.Commit(consumeResult);
-                }
+                consumer.Commit(consumeResult);
             }
-            catch (Exception e)
+        }
+        catch (Exception e)
+        {
+            switch (e)
             {
-                if(e is OperationCanceledException)
+                case OperationCanceledException:
                     consumer.Close();
-                else if (e is ConsumeException)
+                    break;
+                case ConsumeException:
                     _logger.LogError("Error consuming message: {error}", e.Message);
-                else
+                    break;
+                default:
                     _logger.LogError("Error: {error}", e.Message);
+                    break;
             }
         }
     }

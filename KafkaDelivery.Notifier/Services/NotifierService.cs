@@ -2,8 +2,9 @@ namespace KafkaDelivery.Notifier.Services;
 
 public class NotifierService : INotifierService
 {
-    public void Notify(string email)
+    public void NotifyUserOrderStatus(string name, string email, string orderStatus)
     {
-        Console.WriteLine("Email sent to: " + email);
+        Console.WriteLine($"Email to: {email}");
+        Console.WriteLine($"Hello {name}, your order status is {orderStatus}");
     }
 }

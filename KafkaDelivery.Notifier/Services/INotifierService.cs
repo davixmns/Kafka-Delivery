@@ -2,5 +2,5 @@ namespace KafkaDelivery.Notifier.Services;
 
 public interface INotifierService
 {
-    void Notify(string email);
+    void NotifyUserOrderStatus(string name, string email, string orderStatus);
 }

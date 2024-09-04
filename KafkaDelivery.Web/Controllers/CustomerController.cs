@@ -26,6 +26,6 @@ public class CustomerController : ControllerBase
     public IActionResult Create([FromBody] Customer customer)
     {
         _customerRepository.Save(customer);
-        return Ok();
+        return Ok(customer);
     }
 }
