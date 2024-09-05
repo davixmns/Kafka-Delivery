@@ -6,10 +6,10 @@ namespace KafkaDelivery.App.Commands;
 
 public class CancelOrderCommand : IRequest<AppResult<Order>>
 {
-    public string OrderId { get; set; }
+    public int OrderId { get; set; }
     public Order Order { get; set; }
     
-    public CancelOrderCommand(string orderId)
+    public CancelOrderCommand(int orderId)
     {
         OrderId = orderId;
     }

@@ -1,26 +1,24 @@
 using FluentValidation;
 using KafkaDelivery.App.Commands;
+using KafkaDelivery.Domain.Entities;
 using KafkaDelivery.Infra.Repositories;
 
 namespace KafkaDelivery.App.Validators;
 
 public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
-    public CreateOrderCommandValidator(ICustomerRepository customerRepository)
+    public CreateOrderCommandValidator(IRepository<Customer> customerRepository)
     {
         RuleFor(x => x.CustomerId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("CustomerId cannot be null")
-            .Must(((command, customerId) =>
+            .MustAsync(async (customerId, cancellation) =>
             {
-                var customer = customerRepository.GetById(customerId);
-                if (customer is null)
-                    return false;
-                command.Customer = customer;
-                return true;
-            })).WithMessage("Customer not found");
+                var customerExists = await customerRepository.GetAsync(c => c.Id == customerId);
+                return customerExists != null;
+            });
         
-        RuleFor(x => x.Items)
+        RuleFor(x => x.Products)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Items cannot be null");
     }

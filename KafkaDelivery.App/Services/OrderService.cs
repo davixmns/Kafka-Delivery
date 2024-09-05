@@ -10,9 +10,9 @@ namespace KafkaDelivery.App.Services;
 public class OrderService : IOrderService
 {
     private readonly IKafkaService _kafkaService;
-    private readonly IOrderRepository _orderRepository;
+    private readonly IRepository<Order> _orderRepository;
 
-    public OrderService(IKafkaService kafkaService, IOrderRepository orderRepository)
+    public OrderService(IKafkaService kafkaService, IRepository<Order> orderRepository)
     {
         _kafkaService = kafkaService;
         _orderRepository = orderRepository;
@@ -20,7 +20,7 @@ public class OrderService : IOrderService
 
     public async Task<AppResult<Order>> CreateOrderAsync(Order order)
     {
-        _orderRepository.Save(order);
+        await _orderRepository.SaveAsync(order);
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,
@@ -38,7 +38,7 @@ public class OrderService : IOrderService
         if(!payResult.IsSuccess)
             return AppResult<Order>.Failure(payResult.ErrorMessage);
         
-        _orderRepository.Update(order);
+        _orderRepository.UpdateAsync(order);
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,
@@ -56,7 +56,7 @@ public class OrderService : IOrderService
         if(!cancelResult.IsSuccess)
             return AppResult<Order>.Failure(cancelResult.ErrorMessage);
         
-        _orderRepository.Update(order);
+        _orderRepository.UpdateAsync(order);
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,

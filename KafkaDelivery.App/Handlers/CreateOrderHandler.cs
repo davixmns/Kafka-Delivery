@@ -17,7 +17,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, AppResult<
 
     public async Task<AppResult<Order>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var newOrder = new Order(request.Items, request.Customer);
+        var newOrder = new Order(request.Products, request.Customer);
         return await _orderService.CreateOrderAsync(newOrder);
     }
 }

@@ -1,7 +1,9 @@
+using KafkaDelivery.Domain.Entities;
+
 namespace KafkaDelivery.App.Dtos;
 
 public class CreateOrderRequestDto
 {
-    public string CustomerId { get; set; }
-    public IList<string> Items { get; set; }
+    public int CustomerId { get; set; }
+    public IList<Product> Products { get; set; }
 }

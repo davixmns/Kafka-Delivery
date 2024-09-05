@@ -1,6 +1,6 @@
 namespace KafkaDelivery.Domain.Entities;
 
-public class Customer
+public class Customer : BaseEntity
 {
     public string CustomerId { get; set; }
     public string Name { get; set; } 

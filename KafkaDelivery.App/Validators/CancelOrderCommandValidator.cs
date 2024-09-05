@@ -1,23 +1,21 @@
 using FluentValidation;
 using KafkaDelivery.App.Commands;
+using KafkaDelivery.Domain.Entities;
 using KafkaDelivery.Infra.Repositories;
 
 namespace KafkaDelivery.App.Validators;
 
 public class CancelOrderCommandValidator : AbstractValidator<CancelOrderCommand>
 {
-    public CancelOrderCommandValidator(IOrderRepository orderRepository)
+    public CancelOrderCommandValidator(IRepository<Order> orderRepository)
     {
         RuleFor(x => x.OrderId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("OrderId cannot be null")
-            .Must(((command, orderId) =>
+            .MustAsync(async (orderId, cancellation) =>
             {
-                var order = orderRepository.GetById(orderId);
-                if (order is null)
-                    return false;
-                command.Order = order;
-                return true;
-            })).WithMessage("Order not found");
+                var orderExists = await orderRepository.GetAsync(o => o.Id == orderId);
+                return orderExists != null;
+            });
     }
 }

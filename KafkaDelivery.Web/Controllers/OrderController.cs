@@ -30,7 +30,7 @@ public class OrderController: ControllerBase
     
     [HttpPut]
     [Route("PayOrder/{orderId}")]
-    public async Task<IActionResult> PayOrder(PayOrderRequestDto payOrderRequestDto, string orderId)
+    public async Task<IActionResult> PayOrder(PayOrderRequestDto payOrderRequestDto, int orderId)
     {
         var payOrderCommand = new PayOrderCommand(payOrderRequestDto, orderId);
         
@@ -43,7 +43,7 @@ public class OrderController: ControllerBase
     
     [HttpPut]
     [Route("CancelOrder/{orderId}")]
-    public async Task<IActionResult> CancelOrder(string orderId)
+    public async Task<IActionResult> CancelOrder(int orderId)
     {
         var cancelOrderCommand = new CancelOrderCommand(orderId);
         
