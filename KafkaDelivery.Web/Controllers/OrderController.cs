@@ -27,4 +27,31 @@ public class OrderController: ControllerBase
             ? Ok(result)
             : BadRequest(result);
     }
+    
+    [HttpPut]
+    [Route("PayOrder/{orderId}")]
+    public async Task<IActionResult> PayOrder(PayOrderRequestDto payOrderRequestDto, string orderId)
+    {
+        var payOrderCommand = new PayOrderCommand(payOrderRequestDto, orderId);
+        
+        var result = await _mediator.Send(payOrderCommand);
+        
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(result);
+    }
+    
+    [HttpPut]
+    [Route("CancelOrder/{orderId}")]
+    public async Task<IActionResult> CancelOrder(string orderId)
+    {
+        var cancelOrderCommand = new CancelOrderCommand(orderId);
+        
+        var result = await _mediator.Send(cancelOrderCommand);
+        
+        return result.IsSuccess
+            ? Ok(result)
+            : BadRequest(result);
+    }
+    
 }
