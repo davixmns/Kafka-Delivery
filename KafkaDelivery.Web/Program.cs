@@ -7,9 +7,11 @@ using KafkaDelivery.App.Validators;
 using KafkaDelivery.Infra.Context;
 using KafkaDelivery.Infra.Repositories;
 using KafkaDelivery.Infra.Services;
+using KafkaDelivery.Infra.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +30,19 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 // FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderCommandValidator>();
 
-// Services
+// Application Services
 builder.Services.AddScoped<IOrderService, OrderService>();
+
+// Kafka Services
+builder.Services.AddSingleton<IKafkaAdminService, KafkaAdminService>(ks =>
+{
+    var adminConfig = new AdminClientConfig
+    {
+        BootstrapServers = builder.Configuration["Kafka:BootstrapServers"],
+    };
+    return new KafkaAdminService(adminConfig, ks.GetRequiredService<ILogger<KafkaAdminService>>());
+});
+
 builder.Services.AddScoped<IKafkaService, KafkaService>(ks =>
 {
     var producerConfig = new ProducerConfig
@@ -52,6 +65,9 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// Middleware de exceção global
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -59,5 +75,22 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+var kafkaTopics = new List<string>
+{
+    KafkaTopics.OrdersPaymentPending,
+    KafkaTopics.OrdersPaid,
+    KafkaTopics.OrdersOnDelivery,
+    KafkaTopics.OrdersDelivered,
+    KafkaTopics.OrdersCanceled,
+};
+
+var kafkaAdminService = app.Services.GetRequiredService<IKafkaAdminService>();
+
+await kafkaAdminService.CreateTopicsAsync(
+    topicNames: kafkaTopics,
+    numPartitions: 3,
+    replicationFactor: 1
+);
 
 app.Run();

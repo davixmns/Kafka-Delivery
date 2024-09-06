@@ -1,4 +1,3 @@
-using Confluent.Kafka;
 using KafkaDelivery.App.Wrappers;
 using KafkaDelivery.Domain.Entities;
 using KafkaDelivery.Infra.Repositories;
@@ -24,8 +23,7 @@ public class OrderService : IOrderService
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,
-            topicName: KafkaTopics.Orders, 
-            partition: (int)OrderStatus.PaymentPending
+            topicName: KafkaTopics.OrdersPaymentPending 
         );
         
         return AppResult<Order>.Success(order);
@@ -38,12 +36,11 @@ public class OrderService : IOrderService
         if(!payResult.IsSuccess)
             return AppResult<Order>.Failure(payResult.ErrorMessage);
         
-        _orderRepository.UpdateAsync(order);
+        await _orderRepository.UpdateAsync(order);
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,
-            topicName: KafkaTopics.Orders, 
-            partition: (int)OrderStatus.Paid
+            topicName: KafkaTopics.OrdersPaid
         );
         
         return AppResult<Order>.Success(order);
@@ -56,12 +53,11 @@ public class OrderService : IOrderService
         if(!cancelResult.IsSuccess)
             return AppResult<Order>.Failure(cancelResult.ErrorMessage);
         
-        _orderRepository.UpdateAsync(order);
+        await _orderRepository.UpdateAsync(order);
         
         await _kafkaService.PublishMessageToTopicAsync(
             message: order,
-            topicName: KafkaTopics.Orders, 
-            partition: (int)OrderStatus.Canceled
+            topicName: KafkaTopics.OrdersCanceled
         );
         
         return AppResult<Order>.Success(order);

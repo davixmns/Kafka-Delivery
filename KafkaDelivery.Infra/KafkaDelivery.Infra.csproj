@@ -21,4 +21,8 @@
       <ProjectReference Include="..\KafkaDelivery.Domain\KafkaDelivery.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

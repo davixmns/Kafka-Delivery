@@ -24,7 +24,8 @@ public class Worker : BackgroundService
         _logger.LogInformation("Order notifier is running at: {time}", DateTimeOffset.UtcNow);
 
         using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConsumerConfig).Build();
-        consumer.Subscribe(KafkaTopics.Orders);
+        
+        consumer.Subscribe(KafkaTopics.OrdersPaymentPending);
 
         try
         {

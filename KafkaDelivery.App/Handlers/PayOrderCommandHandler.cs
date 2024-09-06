@@ -6,11 +6,11 @@ using MediatR;
 
 namespace KafkaDelivery.App.Handlers;
 
-public class PayOrderHandler : IRequestHandler<PayOrderCommand, AppResult<Order>>
+public class PayOrderCommandHandler : IRequestHandler<PayOrderCommand, AppResult<Order>>
 {
     private readonly IOrderService _orderService;
     
-    public PayOrderHandler(IOrderService orderService)
+    public PayOrderCommandHandler(IOrderService orderService)
     {
         _orderService = orderService;
     }

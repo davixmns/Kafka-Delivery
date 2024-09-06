@@ -11,9 +11,9 @@ public class CreateOrderCommand : IRequest<AppResult<Order>>
     public Customer Customer { get; set; }
     public IList<Product> Products { get; set; }
     
-    public CreateOrderCommand(CreateOrderRequestDto orderRequestDto)
+    public CreateOrderCommand(IList<Product> products, int customerId)
     {
-        CustomerId = orderRequestDto.CustomerId;
-        Products = orderRequestDto.Products;
+        CustomerId = customerId;
+        Products = products;
     }
 }

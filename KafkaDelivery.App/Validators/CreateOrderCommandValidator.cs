@@ -12,10 +12,16 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
         RuleFor(x => x.CustomerId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("CustomerId cannot be null")
-            .MustAsync(async (customerId, cancellation) =>
+            .MustAsync(async (command, customerId, cancellation) =>
             {
                 var customerExists = await customerRepository.GetAsync(c => c.Id == customerId);
-                return customerExists != null;
+                
+                if (customerExists is null)
+                    return false;
+                
+                command.Customer = customerExists;
+
+                return true;
             });
         
         RuleFor(x => x.Products)

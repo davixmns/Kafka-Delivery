@@ -19,7 +19,7 @@ public class OrderController: ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOrder(CreateOrderRequestDto orderRequestDto)
     {
-        var createOrderCommand = new CreateOrderCommand(orderRequestDto);
+        var createOrderCommand = new CreateOrderCommand(orderRequestDto.Products, orderRequestDto.CustomerId);
         
         var result = await _mediator.Send(createOrderCommand);
         

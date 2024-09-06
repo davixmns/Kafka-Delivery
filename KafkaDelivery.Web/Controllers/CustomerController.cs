@@ -1,7 +1,7 @@
+using KafkaDelivery.App.Commands;
 using KafkaDelivery.Domain.Entities;
-using KafkaDelivery.Infra.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers;
 
@@ -9,36 +9,40 @@ namespace Web.Controllers;
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
-    private readonly IRepository<Customer> _customerRepository;
-    private readonly IRepository<Order> _orderRepository;
+    private readonly IMediator _mediator;
     
-    public CustomerController(IRepository<Customer> customerRepository, IRepository<Order> orderRepository)
+    public CustomerController(IMediator mediator)
     {
-        _customerRepository = customerRepository;
-        _orderRepository = orderRepository;
+        _mediator = mediator;
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAllCustomers()
     {
-        var customers = await _customerRepository.GetAll().ToListAsync();
+        var command = new GetAllCustomersCommand();
+        
+        var customers = await _mediator.Send(command);
         
         return Ok(customers);
     }
     
     [HttpPost]
-    public IActionResult Create([FromBody] Customer customer)
+    public async Task<IActionResult> CreateCustomer(Customer customer)
     {
-        _customerRepository.SaveAsync(customer);
-        return Ok(customer);
+        var command = new CreateCustomerCommand(customer.Name, customer.Email, customer.PhoneNumber);
+        
+        var createdCustomer = await _mediator.Send(command);
+        
+        return Ok(createdCustomer);
     }
     
     [HttpGet("{customerId}")]
-    public IActionResult GetCustomerOrders(string customerId)
+    public async Task<IActionResult> GetCustomerOrders(int customerId)
     {
-        var customer = _orderRepository.GetAll()
-            .Where(x => x.Customer.CustomerId == customerId);
+        var command = new GetCustomerOrdersQuery(customerId);
         
-        return Ok(customer);
+        var customerOrders = await _mediator.Send(command);
+        
+        return Ok(customerOrders);
     }
 }

@@ -5,6 +5,6 @@ public enum OrderStatus
     PaymentPending,
     Paid,
     OnDelivery,
-    Devlivered,
+    Delivered,
     Canceled,
 }

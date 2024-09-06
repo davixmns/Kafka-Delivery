@@ -17,7 +17,8 @@ public class Order : BaseEntity
         UpdatedAt = DateTime.UtcNow;
         Status = OrderStatus.PaymentPending;
         Products = products;
-        Customer = customer;
+        Customer = customer ?? throw new ArgumentNullException(nameof(customer));
+        CustomerId = customer.Id;
     }
     
     public Order()
