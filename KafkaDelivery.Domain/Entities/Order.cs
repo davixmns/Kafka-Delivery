@@ -1,3 +1,4 @@
+using KafkaDelivery.Domain.ValueObjects;
 using KafkaDelivery.Domain.Wrappers;
 
 namespace KafkaDelivery.Domain.Entities;

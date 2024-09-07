@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Confluent.Kafka;
-using KafkaDelivery.Domain.Entities;
 using KafkaDelivery.Notifier.Services;
 using KafkaDelivery.Notifier.Utils;
 

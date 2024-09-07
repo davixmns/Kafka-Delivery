@@ -29,10 +29,10 @@ public class OrderController: ControllerBase
     }
     
     [HttpPut]
-    [Route("PayOrder/{orderId}")]
-    public async Task<IActionResult> PayOrder(PayOrderRequestDto payOrderRequestDto, int orderId)
+    [Route("PayOrder")]
+    public async Task<IActionResult> PayOrder(PayOrderRequestDto dto)
     {
-        var payOrderCommand = new PayOrderCommand(payOrderRequestDto, orderId);
+        var payOrderCommand = new PayOrderCommand(dto.OrderId, dto.PaymentMethod);
         
         var result = await _mediator.Send(payOrderCommand);
         

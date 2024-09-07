@@ -1,5 +1,6 @@
 using Confluent.Kafka;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using KafkaDelivery.App.Commands;
 using KafkaDelivery.App.PipelineBehaviors;
 using KafkaDelivery.App.Services;
@@ -25,11 +26,11 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateOrderCommand>());
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+// builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 // FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderCommandValidator>();
-
+builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderRequestDtoValidator>();
+// builder.Services.AddFluentValidationAutoValidation();
 // Application Services
 builder.Services.AddScoped<IOrderService, OrderService>();
 

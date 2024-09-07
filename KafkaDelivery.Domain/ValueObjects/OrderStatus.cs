@@ -1,4 +1,4 @@
-namespace KafkaDelivery.Domain.Entities;
+namespace KafkaDelivery.Domain.ValueObjects;
 
 public enum OrderStatus
 {

@@ -1,4 +1,7 @@
+using FluentValidation;
 using KafkaDelivery.App.Commands;
+using KafkaDelivery.App.Dtos;
+using KafkaDelivery.App.Validators;
 using KafkaDelivery.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +28,11 @@ public class CustomerController : ControllerBase
         
         return Ok(customers);
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> CreateCustomer(Customer customer)
+    public async Task<IActionResult> CreateCustomer(CreateCustomerRequestDto dto)
     {
-        var command = new CreateCustomerCommand(customer.Name, customer.Email, customer.PhoneNumber);
+        var command = new CreateCustomerCommand(dto.Name, dto.Email, dto.PhoneNumber);
         
         var createdCustomer = await _mediator.Send(command);
         

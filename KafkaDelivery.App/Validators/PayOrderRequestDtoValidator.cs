@@ -1,13 +1,15 @@
 using FluentValidation;
 using KafkaDelivery.App.Commands;
+using KafkaDelivery.App.Dtos;
 using KafkaDelivery.Domain.Entities;
+using KafkaDelivery.Domain.ValueObjects;
 using KafkaDelivery.Infra.Repositories;
 
 namespace KafkaDelivery.App.Validators;
 
-public class PayOrderCommandValidator : AbstractValidator<PayOrderCommand>
+public class PayOrderRequestDtoValidator : AbstractValidator<PayOrderRequestDto>
 {
-    public PayOrderCommandValidator(IRepository<Order> orderRepository)
+    public PayOrderRequestDtoValidator(IRepository<Order> orderRepository)
     {
         RuleFor(x => x.OrderId)
             .Cascade(CascadeMode.Stop)
