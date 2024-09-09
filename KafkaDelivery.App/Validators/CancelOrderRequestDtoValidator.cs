@@ -17,6 +17,6 @@ public class CancelOrderRequestDtoValidator : AbstractValidator<CancelOrderReque
             {
                 var orderExists = orderRepository.GetAsync(o => o.Id == orderId).Result;
                 return orderExists != null;
-            });
+            }).WithMessage("Order not found");
     }
 }

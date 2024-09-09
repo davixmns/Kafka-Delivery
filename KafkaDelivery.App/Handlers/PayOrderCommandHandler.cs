@@ -21,7 +21,10 @@ public class PayOrderCommandHandler : IRequestHandler<PayOrderCommand, AppResult
     
     public async Task<AppResult<Order>> Handle(PayOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetAsync(o => o.Id == request.OrderId);
+        var order = await _orderRepository.GetAsync(
+            o => o.Id == request.OrderId,
+            o => o.Customer
+        );
         
         var payResult = order!.Pay();
         

@@ -22,7 +22,10 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, App
     
     public async Task<AppResult<Order>> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetAsync(o => o.Id == request.OrderId);
+        var order = await _orderRepository.GetAsync(
+            o => o.Id == request.OrderId,
+            o => o.Customer
+        );
         
         var cancelResult = order!.Cancel();
         

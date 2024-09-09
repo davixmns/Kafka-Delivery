@@ -29,7 +29,7 @@ public class Order : BaseEntity
     public DomainResult Pay()
     {
         if (Status is not OrderStatus.PaymentPending)
-            return DomainResult.Failure("Order is already paid");
+            return DomainResult.Failure("Order is cannot be paid");
         
         Status = OrderStatus.Paid; 
         UpdatedAt = DateTime.UtcNow;

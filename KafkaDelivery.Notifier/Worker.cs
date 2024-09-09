@@ -23,16 +23,21 @@ public class Worker : BackgroundService
         _logger.LogInformation("Order notifier is running at: {time}", DateTimeOffset.UtcNow);
 
         using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConsumerConfig).Build();
-        
-        consumer.Subscribe(KafkaTopics.OrdersPaymentPending);
-        consumer.Subscribe(KafkaTopics.OrdersPaid);
+
+        consumer.Subscribe(new List<string>
+        {
+            KafkaTopics.OrdersPaymentPending,
+            KafkaTopics.OrdersPaid,
+            KafkaTopics.OrdersOnDelivery,
+            KafkaTopics.OrdersDelivered,
+            KafkaTopics.OrdersCanceled
+        });
 
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 var consumeResult = consumer.Consume(stoppingToken);
-                Console.WriteLine(consumeResult.Message.Value);   
                 using var jsonDoc = JsonDocument.Parse(consumeResult.Message.Value);
                 var root = jsonDoc.RootElement;
                 
@@ -43,8 +48,7 @@ public class Worker : BackgroundService
                 var userName = customer.GetProperty("Name").GetString()!;
                 
                 _notifierService.NotifyUserOrderStatus(userName, customerEmail, orderId, (OrderStatus) orderStatus);
-                
-                consumer.Commit(consumeResult);
+                consumer.Commit();
             }
         }
         catch (Exception e)

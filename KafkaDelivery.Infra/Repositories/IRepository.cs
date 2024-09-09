@@ -6,7 +6,7 @@ namespace KafkaDelivery.Infra.Repositories;
 public interface IRepository<TEntity> where TEntity : BaseEntity
 {
     IQueryable<TEntity> GetAll();
-    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
     Task<TEntity> SaveAsync(TEntity entity);
     Task<TEntity> UpdateAsync(TEntity entity);
     Task<TEntity> DeleteAsync(TEntity entity);
