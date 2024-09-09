@@ -25,22 +25,25 @@ public class Worker : BackgroundService
         using var consumer = new ConsumerBuilder<Ignore, string>(_kafkaConsumerConfig).Build();
         
         consumer.Subscribe(KafkaTopics.OrdersPaymentPending);
+        consumer.Subscribe(KafkaTopics.OrdersPaid);
 
         try
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 var consumeResult = consumer.Consume(stoppingToken);
+                Console.WriteLine(consumeResult.Message.Value);   
                 using var jsonDoc = JsonDocument.Parse(consumeResult.Message.Value);
                 var root = jsonDoc.RootElement;
                 
                 var customer = root.GetProperty("Customer");
                 var customerEmail= customer.GetProperty("Email").GetString()!;
-                var orderStatus = root.GetProperty("Status").GetInt32().ToString();
+                var orderStatus = root.GetProperty("Status").GetInt32();
+                var orderId = root.GetProperty("Id").GetInt32();
                 var userName = customer.GetProperty("Name").GetString()!;
                 
-                _notifierService.NotifyUserOrderStatus(userName, customerEmail, orderStatus);
-
+                _notifierService.NotifyUserOrderStatus(userName, customerEmail, orderId, (OrderStatus) orderStatus);
+                
                 consumer.Commit(consumeResult);
             }
         }

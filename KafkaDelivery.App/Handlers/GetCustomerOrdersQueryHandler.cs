@@ -19,6 +19,7 @@ public class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQu
     {
         var customerOrders = await _orderRepository.GetAll()
             .Where(o => o.CustomerId == request.CustomerId)
+            .Include(o => o.Products)
             .ToListAsync(cancellationToken);
         
         return customerOrders;

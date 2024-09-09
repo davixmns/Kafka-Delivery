@@ -6,7 +6,7 @@ namespace KafkaDelivery.Domain.Entities;
 public class Order : BaseEntity
 {
     public int CustomerId { get; init; }
-    public Customer Customer { get; init; }
+    public Customer Customer { get; init; } 
     public IList<Product> Products { get; init; }
     public OrderStatus Status { get; set; }
     public DateTime CreatedAt { get; init; }
@@ -18,7 +18,7 @@ public class Order : BaseEntity
         UpdatedAt = DateTime.UtcNow;
         Status = OrderStatus.PaymentPending;
         Products = products;
-        Customer = customer ?? throw new ArgumentNullException(nameof(customer));
+        Customer = customer;
         CustomerId = customer.Id;
     }
     
