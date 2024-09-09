@@ -8,7 +8,6 @@ namespace KafkaDelivery.App.Commands;
 public class CreateOrderCommand : IRequest<AppResult<Order>>
 {
     public int CustomerId { get; set; }
-    public Customer Customer { get; set; }
     public IList<Product> Products { get; set; }
     
     public CreateOrderCommand(IList<Product> products, int customerId)

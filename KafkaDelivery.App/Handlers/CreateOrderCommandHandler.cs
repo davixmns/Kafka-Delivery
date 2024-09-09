@@ -1,23 +1,39 @@
 using KafkaDelivery.App.Commands;
-using KafkaDelivery.App.Services;
 using KafkaDelivery.App.Wrappers;
 using KafkaDelivery.Domain.Entities;
+using KafkaDelivery.Infra.Repositories;
+using KafkaDelivery.Infra.Services;
+using KafkaDelivery.Infra.Utils;
 using MediatR;
 
 namespace KafkaDelivery.App.Handlers;
 
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, AppResult<Order>>
 {
-    private readonly IOrderService _orderService;
+    private readonly IKafkaService _kafkaService;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IRepository<Customer> _customerRepository;
     
-    public CreateOrderCommandHandler(IOrderService orderService)
+    public CreateOrderCommandHandler(IKafkaService kafkaService, IRepository<Order> orderRepository, IRepository<Customer> customerRepository)
     {
-        _orderService = orderService;
+        _kafkaService = kafkaService;
+        _orderRepository = orderRepository;
+        _customerRepository = customerRepository;
     }
-
+    
     public async Task<AppResult<Order>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var newOrder = new Order(request.Products, request.Customer);
-        return await _orderService.CreateOrderAsync(newOrder);
+        var customer = await _customerRepository.GetAsync(c => c.Id == request.CustomerId);
+        
+        var order = new Order(request.Products, customer!);
+        
+        await _orderRepository.SaveAsync(order);
+        
+        await _kafkaService.PublishMessageToTopicAsync(
+            message: order,
+            topicName: KafkaTopics.OrdersPaymentPending 
+        );
+        
+        return AppResult<Order>.Success(order);
     }
 }

@@ -1,8 +1,8 @@
 using KafkaDelivery.App.Commands;
-using KafkaDelivery.Domain.Entities;
 using KafkaDelivery.Infra.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using KafkaDelivery.Domain.Entities;
 
 namespace KafkaDelivery.App.Handlers;
 

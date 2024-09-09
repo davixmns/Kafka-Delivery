@@ -13,11 +13,11 @@ public class CreateOrderRequestDtoValidator : AbstractValidator<CreateOrderReque
         RuleFor(x => x.CustomerId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("CustomerId cannot be null")
-            .MustAsync(async (customerId, cancellation) =>
+            .Must((customerId) =>
             {
-                var customerExists = await customerRepository.GetAsync(c => c.Id == customerId);
+                var customerExists = customerRepository.GetAsync(c => c.Id == customerId).Result;
                 return customerExists != null;
-            });
+            }).WithMessage("Customer does not exist");
         
         RuleFor(x => x.Products)
             .Cascade(CascadeMode.Stop)

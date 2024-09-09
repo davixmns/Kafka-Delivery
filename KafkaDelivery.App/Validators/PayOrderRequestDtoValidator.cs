@@ -14,9 +14,9 @@ public class PayOrderRequestDtoValidator : AbstractValidator<PayOrderRequestDto>
         RuleFor(x => x.OrderId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("OrderId cannot be null")
-            .MustAsync(async (orderId, cancellation) =>
+            .Must((orderId) =>
             {
-                var order = await orderRepository.GetAsync(o => o.Id == orderId);
+                var order = orderRepository.GetAsync(o => o.Id == orderId).Result;
                 return order != null;
             }).WithMessage("Order not found");
 

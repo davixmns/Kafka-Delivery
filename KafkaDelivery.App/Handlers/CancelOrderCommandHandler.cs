@@ -1,22 +1,41 @@
+
 using KafkaDelivery.App.Commands;
-using KafkaDelivery.App.Services;
 using KafkaDelivery.App.Wrappers;
-using KafkaDelivery.Domain.Entities;
+using KafkaDelivery.Infra.Repositories;
+using KafkaDelivery.Infra.Services;
+using KafkaDelivery.Infra.Utils;
 using MediatR;
+using KafkaDelivery.Domain.Entities;
 
 namespace KafkaDelivery.App.Handlers;
 
 public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, AppResult<Order>>
 {
-    private readonly IOrderService _orderService;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IKafkaService _kafkaService;
     
-    public CancelOrderCommandHandler(IOrderService orderService)
+    public CancelOrderCommandHandler(IRepository<Order> orderRepository, IKafkaService kafkaService)
     {
-        _orderService = orderService;
+        _orderRepository = orderRepository;
+        _kafkaService = kafkaService;
     }
     
     public async Task<AppResult<Order>> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
     {
-        return await _orderService.CancelOrderAsync(request.Order); 
+        var order = await _orderRepository.GetAsync(o => o.Id == request.OrderId);
+        
+        var cancelResult = order!.Cancel();
+        
+        if(!cancelResult.IsSuccess)
+            return AppResult<Order>.Failure(cancelResult.ErrorMessage);
+        
+        await _orderRepository.UpdateAsync(order);
+        
+        await _kafkaService.PublishMessageToTopicAsync(
+            message: order,
+            topicName: KafkaTopics.OrdersCanceled
+        );
+        
+        return AppResult<Order>.Success(order);
     }
 }

@@ -42,10 +42,10 @@ public class OrderController: ControllerBase
     }
     
     [HttpPut]
-    [Route("CancelOrder/{orderId}")]
-    public async Task<IActionResult> CancelOrder(int orderId)
+    [Route("CancelOrder")]
+    public async Task<IActionResult> CancelOrder(CancelOrderRequestDto dto)
     {
-        var cancelOrderCommand = new CancelOrderCommand(orderId);
+        var cancelOrderCommand = new CancelOrderCommand(dto.OrderId);
         
         var result = await _mediator.Send(cancelOrderCommand);
         

@@ -22,7 +22,7 @@ public class CustomerController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCustomers()
     {
-        var command = new GetAllCustomersCommand();
+        var command = new GetAllCustomersQuery();
         
         var customers = await _mediator.Send(command);
         

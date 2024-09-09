@@ -10,18 +10,17 @@ public class CreateCustomerRequestDtoValidator : AbstractValidator<CreateCustome
 {
     public CreateCustomerRequestDtoValidator(IRepository<Customer> customerRepository)
     {
-        Console.WriteLine("CreateCustomerRequestDtoValidator created");
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name cannot be null");
 
         RuleFor(x => x.Email)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Email cannot be null")
-            .MustAsync(async (email, cancellation) =>
+            .Must((email) =>
             {
-                var customerExists = await customerRepository.GetAsync(c => c.Email == email);
+                var customerExists = customerRepository.GetAsync(c => c.Email == email).Result;
                 return customerExists == null;
-            });
+            }).WithMessage("Customer already exists");
 
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("PhoneNumber cannot be null");

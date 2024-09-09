@@ -3,5 +3,5 @@ using MediatR;
 
 namespace KafkaDelivery.App.Commands;
 
-public class GetAllCustomersCommand : IRequest<IEnumerable<Customer>> 
+public class GetAllCustomersQuery : IRequest<IEnumerable<Customer>> 
 { }

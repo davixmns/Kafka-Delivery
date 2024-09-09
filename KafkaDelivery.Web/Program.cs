@@ -2,15 +2,11 @@ using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using KafkaDelivery.App.Commands;
-using KafkaDelivery.App.PipelineBehaviors;
-using KafkaDelivery.App.Services;
 using KafkaDelivery.App.Validators;
 using KafkaDelivery.Infra.Context;
 using KafkaDelivery.Infra.Repositories;
 using KafkaDelivery.Infra.Services;
 using KafkaDelivery.Infra.Utils;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web.Middlewares;
 
@@ -30,9 +26,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Cr
 
 // FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderRequestDtoValidator>();
-// builder.Services.AddFluentValidationAutoValidation();
-// Application Services
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddFluentValidationAutoValidation();
 
 // Kafka Services
 builder.Services.AddSingleton<IKafkaAdminService, KafkaAdminService>(ks =>
@@ -52,12 +46,6 @@ builder.Services.AddScoped<IKafkaService, KafkaService>(ks =>
         Acks = Acks.Leader,
     };
     return new KafkaService(producerConfig);
-});
-
-// Desativando a validação automática do ModelState
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
 });
 
 builder.Services.AddEndpointsApiExplorer();

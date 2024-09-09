@@ -5,11 +5,11 @@ namespace KafkaDelivery.Domain.Entities;
 
 public class Order : BaseEntity
 {
-    public int CustomerId { get; set; }
-    public Customer Customer { get; set; }
-    public IList<Product> Products { get; set; }
+    public int CustomerId { get; init; }
+    public Customer Customer { get; init; }
+    public IList<Product> Products { get; init; }
     public OrderStatus Status { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
 
     public Order(IList<Product> products, Customer customer)
